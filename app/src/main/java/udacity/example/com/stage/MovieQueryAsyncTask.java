@@ -47,6 +47,5 @@ public class MovieQueryAsyncTask extends AsyncTask<URL, Void, List<Movie>> {
     protected void onPostExecute(List<Movie> list) {
         super.onPostExecute(list);
         taskCompleted.onTaskCompleted(list);
-        taskCompleted.onTaskCompleted(list);
     }
 }

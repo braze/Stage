@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     public void onClick(int pos) {
         Movie movie = mAdapter.getMoviesList().get(pos);
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        intent.putExtra(EXTRA_OBJECT, (Serializable) movie);
+        intent.putExtra(EXTRA_OBJECT, movie);
         startActivity(intent);
     }
 
@@ -67,10 +66,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
 
-        if (isConnected) {
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
             URL searchUrl = NetworkUtils.buildUrl(query);
             mProgressBar.setVisibility(View.VISIBLE);
             new MovieQueryAsyncTask(MainActivity.this).execute(searchUrl);
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         return super.onOptionsItemSelected(item);
     }
 
-    //this method invokes after AsyncTask is complited
+    //this method invokes after AsyncTask is completed
     @Override
     public void onTaskCompleted(List<Movie> list) {
         mAdapter.setMoviesList(list);

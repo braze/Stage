@@ -47,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        Movie movie = (Movie) intent.getSerializableExtra(EXTRA_OBJECT);
+        Movie movie = intent.getExtras().getParcelable(EXTRA_OBJECT);
         String fullPosterPath = NetworkUtils.buildPosterPath(movie.getPosterPath());
 
         populateUI(movie);
