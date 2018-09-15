@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import udacity.example.com.stage.BuildConfig;
+
 public class NetworkUtils {
 
     private static final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/";
@@ -25,7 +27,7 @@ public class NetworkUtils {
     //picture size for poster query
     private static final String size = "w500";
 
-    private static final String api_key = "";
+    private static final String API_KEY = BuildConfig.API_KEY;
 
     private final static String API_KEY_PARAM = "api_key";
 
@@ -38,7 +40,7 @@ public class NetworkUtils {
     public static URL buildUrl(String sortBy) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                 .appendEncodedPath(sortBy)
-                .appendQueryParameter(API_KEY_PARAM, api_key)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 
         URL url = null;

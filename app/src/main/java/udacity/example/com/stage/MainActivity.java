@@ -1,7 +1,9 @@
 package udacity.example.com.stage;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,14 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import udacity.example.com.stage.model.Movie;
-import udacity.example.com.stage.utilites.JsonUtils;
 import udacity.example.com.stage.utilites.NetworkUtils;
 
 import static udacity.example.com.stage.DetailActivity.EXTRA_OBJECT;
@@ -27,7 +26,7 @@ import static udacity.example.com.stage.utilites.NetworkUtils.DISCOVER;
 import static udacity.example.com.stage.utilites.NetworkUtils.POPULAR;
 import static udacity.example.com.stage.utilites.NetworkUtils.TOP_RATED;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler, OnTaskCompleted {
 
     private MovieAdapter mAdapter;
     private RecyclerView mNumbersList;
@@ -62,8 +61,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     }
 
     private void makeMovieQuery(String query) {
-        URL searchUrl = NetworkUtils.buildUrl(query);
-        new MovieQueryTask().execute(searchUrl);
+
+        //check for internet connection
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (isConnected) {
+            URL searchUrl = NetworkUtils.buildUrl(query);
+            mProgressBar.setVisibility(View.VISIBLE);
+            new MovieQueryAsyncTask(MainActivity.this).execute(searchUrl);
+        }
     }
 
     @Override
@@ -89,38 +100,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         return super.onOptionsItemSelected(item);
     }
 
-    public class MovieQueryTask extends AsyncTask<URL, Void, List<Movie>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Movie> doInBackground(URL... urls) {
-            URL searchUrl = urls[0];
-
-            String movieSearchResult = null;
-            //create list of Movie objects
-            ArrayList<Movie> list = new ArrayList<>();
-            try {
-                //build URL and populate list with Movie objects
-                movieSearchResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-                list = JsonUtils.populateJsonList(movieSearchResult);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> list) {
-            super.onPostExecute(list);
-            //set the same list to adapter
-            mAdapter.setMoviesList(list);
-            mProgressBar.setVisibility(View.GONE);
-        }
+    //this method invokes after AsyncTask is complited
+    @Override
+    public void onTaskCompleted(List<Movie> list) {
+        mAdapter.setMoviesList(list);
+        mProgressBar.setVisibility(View.GONE);
     }
 }
