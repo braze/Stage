@@ -50,6 +50,14 @@ public class DetailActivity extends AppCompatActivity {
         Movie movie = intent.getExtras().getParcelable(EXTRA_OBJECT);
         String fullPosterPath = NetworkUtils.buildPosterPath(movie.getPosterPath());
 
+        /**
+         * test
+         */
+//        String movieId = movie.getMovieId();
+//        NetworkUtils.buildBaseInformationUrl(movieId);
+//        NetworkUtils.buildTrailerUrl(movieId);
+//        NetworkUtils.buildReviewsUrl(movieId);
+
         populateUI(movie);
         Picasso.with(this).load(fullPosterPath).error(R.drawable.ic_no_poster).into(poster);
         setTitle(movie.getTitle());

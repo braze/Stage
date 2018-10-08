@@ -1,6 +1,7 @@
 package udacity.example.com.stage.utilites;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +14,13 @@ import udacity.example.com.stage.BuildConfig;
 
 public class NetworkUtils {
 
+    private static final String TAG = NetworkUtils.class.getSimpleName();
+
     private static final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/";
 
     private static final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+
+    private static final String SINGLE_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/";
 
     public final static String POPULAR = "movie/popular";
 
@@ -25,7 +30,11 @@ public class NetworkUtils {
 
 
     //picture size for poster query
-    private static final String size = "w500";
+    private static final String SIZE = "w500";
+
+    private static final String TRAILER = "videos";
+
+    private static final String REVIEW = "reviews";
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -42,6 +51,8 @@ public class NetworkUtils {
                 .appendEncodedPath(sortBy)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
+
+        Log.d(TAG, "LOOK OUT!!! JUST Url " + builtUri.toString());
 
         URL url = null;
         try {
@@ -60,11 +71,78 @@ public class NetworkUtils {
      */
     public static String buildPosterPath (String posterPath) {
         Uri builtUri = Uri.parse(POSTER_BASE_URL).buildUpon()
-                .appendPath(size)
+                .appendPath(SIZE)
                 .appendEncodedPath(posterPath)
                 .build();
+        Log.d(TAG, "LOOK OUT!!! Poster Path " + builtUri);
+
         return builtUri.toString();
 
+    }
+
+    /**
+     * Build the URL for Trailers request
+     *
+     * @param id The movie id.
+     * @return The String to use for query.
+     */
+    public static URL buildTrailerUrl (String id) {
+        Uri builtUri = Uri.parse(SINGLE_MOVIE_BASE_URL).buildUpon()
+                .appendPath(id)
+                .appendPath(TRAILER)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+        Log.d(TAG, "LOOK OUT!!! Trailer Url" + builtUri.toString());
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+        }
+
+    /**
+     * Build the URL for reviews request
+     *
+     * @param id The movie id.
+     * @return The String to use for query.
+     */
+    public static URL buildReviewsUrl (String id) {
+        Uri builtUri = Uri.parse(SINGLE_MOVIE_BASE_URL).buildUpon()
+                .appendPath(id)
+                .appendPath(REVIEW)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+        Log.d(TAG, "LOOK OUT!!! Reviews Url " + builtUri.toString());
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    /**
+     * Build the base information URL
+     *
+     * @param id The movie id.
+     * @return The String to use for query.
+     */
+    public static URL buildBaseInformationUrl (String id) {
+        Uri builtUri = Uri.parse(SINGLE_MOVIE_BASE_URL).buildUpon()
+                .appendPath(id)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+        Log.d(TAG, "LOOK OUT!!! Base Information Url " + builtUri.toString());
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
     /**

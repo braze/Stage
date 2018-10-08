@@ -1,80 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <!-- title -->
+        <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/colorPrimary"
+            android:padding="@dimen/movie_title_padding"
+            android:text="@string/movie_title_hint"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
 
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/title">
+
+            <!-- poster -->
             <ImageView
                 android:id="@+id/poster_iv"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/poster"
-                android:visibility="visible"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:visibility="visible" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/release_date"
-                android:textSize="@dimen/text_size"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/release_date_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dest_between_header_and_text"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size" />
+                <!-- release date tag -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/release_date"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dist_between_blocks"
-                android:text="@string/vote_average"
-                android:textSize="@dimen/text_size"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textStyle="bold" />
+                <!-- release date value -->
+                <TextView
+                    android:id="@+id/release_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/dest_between_header_and_text"
+                    android:textSize="@dimen/text_size" />
 
-            <TextView
-                android:id="@+id/average_vote_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dest_between_header_and_text"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size" />
+                <!-- average vote tag -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/dist_between_blocks"
+                    android:text="@string/vote_average"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dist_between_blocks"
-                android:text="@string/plot_synopsis"
-                android:textSize="@dimen/text_size"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textStyle="bold" />
+                <!-- average vote value -->
+                <TextView
+                    android:id="@+id/average_vote_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/dest_between_header_and_text"
+                    android:textSize="@dimen/text_size" />
 
-            <TextView
-                android:id="@+id/plot_synopsis_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/dest_between_header_and_text"
-                android:textSize="@dimen/text_size"
-                android:paddingBottom="@dimen/dist_between_blocks"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+        <!-- plot synopsis tag -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingTop="@dimen/dist_between_blocks"
+            android:text="@string/plot_synopsis"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-</FrameLayout>
+        <!-- plot synopsis value -->
+        <TextView
+            android:id="@+id/plot_synopsis_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dist_between_blocks"
+            android:paddingTop="@dimen/dest_between_header_and_text"
+            android:text="movie description with many, many letters"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <!-- divider line -->
+        <TextView
+            android:id="@+id/divide_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_line_height"
+            android:background="@color/gray"
+            android:paddingBottom="@dimen/padding_top_divider_line"
+            android:paddingTop="@dimen/padding_top_divider_line"
+            app:layout_constraintBottom_toBottomOf="@+id/plot_synopsis_tv" />
+
+        <!-- trailers -->
+        <TextView
+            android:id="@+id/trailers_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dist_between_blocks"
+            android:paddingTop="@dimen/dest_between_header_and_text"
+            android:text="@string/trailers"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintStart_toStartOf="@+id/plot_synopsis_tv"
+            app:layout_constraintTop_toBottomOf="@+id/divide_line" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
     private void makeMovieQuery(String query) {
 
         //check for internet connection
-        ConnectivityManager cm =
+        ConnectivityManager connectivityManager =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
             URL searchUrl = NetworkUtils.buildUrl(query);

@@ -5,4 +5,7 @@
     <dimen name="dest_between_header_and_text">8dp</dimen>
     <dimen name="dist_between_blocks">16dp</dimen>
     <dimen name="text_size">16sp</dimen>
+    <dimen name="movie_title_padding">16dp</dimen>
+    <dimen name="divider_line_height">2dp</dimen>
+    <dimen name="padding_top_divider_line">16dp</dimen>
 </resources>

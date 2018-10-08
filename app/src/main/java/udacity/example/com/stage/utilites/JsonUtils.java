@@ -23,13 +23,14 @@ public class JsonUtils {
             for (int i = 0; i < array.length(); i++) {
 
                 JSONObject objectInArray = array.getJSONObject(i);
+                String id = objectInArray.getString("id");
                 String title = objectInArray.getString("title");
                 String releaseDate = objectInArray.getString("release_date");
                 String posterPath = objectInArray.getString("poster_path");
                 String voteAverage = objectInArray.getString("vote_average");
                 String plotSynopsis = objectInArray.getString("overview");
 
-                list.add(new Movie(title, releaseDate, posterPath, voteAverage, plotSynopsis));
+                list.add(new Movie(title, id, releaseDate, posterPath, voteAverage, plotSynopsis));
             }
         } catch (JSONException e) {
             e.printStackTrace();
