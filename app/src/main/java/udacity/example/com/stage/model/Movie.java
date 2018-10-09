@@ -10,7 +10,12 @@ public class Movie implements Parcelable {
     private String posterPath;
     private String voteAverage;
     private String plotSynopsis;
-//    private String review;
+    private String trailerName;
+    private String trailerPath;
+    private String site;
+    private String size;
+    private String author;
+    private String content;
 
     public Movie() {
     }
@@ -24,6 +29,18 @@ public class Movie implements Parcelable {
         this.plotSynopsis = plotSynopsis;
     }
 
+    public Movie(String trailerName, String trailerPath, String site, String size) {
+        this.trailerName = trailerName;
+        this.trailerPath = trailerPath;
+        this.site = site;
+        this.size = size;
+    }
+
+    public Movie(String author, String content) {
+        this.author = author;
+        this.content = content;
+    }
+
     protected Movie(Parcel in) {
         title = in.readString();
         movieId = in.readString();
@@ -31,7 +48,6 @@ public class Movie implements Parcelable {
         posterPath = in.readString();
         voteAverage = in.readString();
         plotSynopsis = in.readString();
-//        review = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -54,7 +70,6 @@ public class Movie implements Parcelable {
         dest.writeString(posterPath);
         dest.writeString(voteAverage);
         dest.writeString(plotSynopsis);
-//        dest.writeString(review);
     }
 
     @Override
@@ -110,11 +125,51 @@ public class Movie implements Parcelable {
         this.movieId = movieId;
     }
 
-//    public String getReview() {
-//        return review;
-//    }
+    public String getTrailerName() {
+        return trailerName;
+    }
 
-//    public void setReview(String review) {
-//        this.review = review;
-//    }
+    public void setTrailerName(String trailerName) {
+        this.trailerName = trailerName;
+    }
+
+    public String getTrailerPath() {
+        return trailerPath;
+    }
+
+    public void setTrailerPath(String trailerPath) {
+        this.trailerPath = trailerPath;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

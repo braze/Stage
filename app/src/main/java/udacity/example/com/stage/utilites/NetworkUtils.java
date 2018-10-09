@@ -22,6 +22,8 @@ public class NetworkUtils {
 
     private static final String SINGLE_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/";
 
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch";
+
     public final static String POPULAR = "movie/popular";
 
     public final static String TOP_RATED = "movie/top_rated";
@@ -39,6 +41,8 @@ public class NetworkUtils {
     private static final String API_KEY = BuildConfig.API_KEY;
 
     private final static String API_KEY_PARAM = "api_key";
+
+    private final static String TRAILER_KEY_PARAM = "v";
 
     /**
      * Build the URL based on sort
@@ -64,7 +68,7 @@ public class NetworkUtils {
     }
 
     /**
-     * Build the URL for poster
+     * Build the path for poster
      *
      * @param posterPath The path for poster.
      * @return The String to use for query.
@@ -74,10 +78,21 @@ public class NetworkUtils {
                 .appendPath(SIZE)
                 .appendEncodedPath(posterPath)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Poster Path " + builtUri);
-
         return builtUri.toString();
+    }
 
+    /**
+     * Build the path for trailer on youTube
+     *
+     * @param youTubeKey The port of path for trailer.
+     * @return The String to use for query.
+     */
+    public static String buildYouTubePath (String youTubeKey) {
+        Uri builtUri = Uri.parse(YOUTUBE_BASE_URL).buildUpon()
+                .appendQueryParameter(TRAILER_KEY_PARAM, youTubeKey)
+                .build();
+        Log.d(TAG, "LOOK OUT!!! youtube link: " + builtUri);
+        return builtUri.toString();
     }
 
     /**

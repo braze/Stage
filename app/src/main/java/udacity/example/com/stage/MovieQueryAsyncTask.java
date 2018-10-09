@@ -37,6 +37,7 @@ public class MovieQueryAsyncTask extends AsyncTask<URL, Void, List<Movie>> {
             movieSearchResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             list = JsonUtils.populateJsonList(movieSearchResult);
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
