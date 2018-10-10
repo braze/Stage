@@ -1,21 +1,23 @@
 package udacity.example.com.stage;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import udacity.example.com.stage.model.Movie;
 import udacity.example.com.stage.model.MovieDetail;
 import udacity.example.com.stage.utilites.JsonUtils;
 import udacity.example.com.stage.utilites.NetworkUtils;
 
-public class DetailMovieQueryAsyncTask extends AsyncTask<String, Void, List<MovieDetail>> {
+public class DetailMovieQueryAsyncTask extends AsyncTask<String, Void, MovieDetail> {
+
+    private static final String TAG = DetailMovieQueryAsyncTask.class.getSimpleName();
+
 
     private OnDetailTaskCompleted detailTaskCompleted;
-
 
     public DetailMovieQueryAsyncTask (OnDetailTaskCompleted activityContext){
         this.detailTaskCompleted = activityContext;
@@ -24,35 +26,40 @@ public class DetailMovieQueryAsyncTask extends AsyncTask<String, Void, List<Movi
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        Log.d(TAG, "onPreExecute: Starting!!!");
     }
 
     @Override
-    protected List<MovieDetail> doInBackground(String... strings) {
+    protected MovieDetail doInBackground(String... strings) {
         String movieId = strings[0];
 
-        List<MovieDetail> detailsObject = new ArrayList<>();
-        //create list of Movie objects
-        ArrayList<Movie> trailersList = new ArrayList<>();
-        ArrayList<Movie> reviewsList = new ArrayList<>();
+        Log.d(TAG, "doInBackground: Starting");
+
+        MovieDetail detailsObject = null;
+        //create list
+        ArrayList<Movie> trailersList;
+        ArrayList<Movie> reviewsList;
         String runtime = "";
 
         //build URLs for requesting data
         URL trailersUrl = NetworkUtils.buildTrailerUrl(movieId);
         URL reviewsUrl = NetworkUtils.buildReviewsUrl(movieId);
         URL movieBaseInfoUrl = NetworkUtils.buildBaseInformationUrl(movieId);
+        Log.d(TAG, "doInBackground: URLs has been built");
 
         try {
-            //build URL and populate list with Movie objects
+            //get JSON strings and populate list with Movie objects
             String trailersSearchResult = NetworkUtils.getResponseFromHttpUrl(trailersUrl);
             trailersList = JsonUtils.getTrailersList(trailersSearchResult);
 
-            String reviewsSearchResult = NetworkUtils.getResponseFromHttpUrl(trailersUrl);
+            String reviewsSearchResult = NetworkUtils.getResponseFromHttpUrl(reviewsUrl);
             reviewsList = JsonUtils.getReviewsList(reviewsSearchResult);
 
-            String movieBaseInfoSearchResult = NetworkUtils.getResponseFromHttpUrl(trailersUrl);
+            String movieBaseInfoSearchResult = NetworkUtils.getResponseFromHttpUrl(movieBaseInfoUrl);
             runtime = JsonUtils.getMovieBaseInfo(movieBaseInfoSearchResult);
 
-            detailsObject.add(new MovieDetail(trailersList, reviewsList, runtime));
+            detailsObject = new MovieDetail(trailersList, reviewsList, runtime);
+            Log.d(TAG, "doInBackground: OBJECT HAS BEEN BUILT");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,8 +67,9 @@ public class DetailMovieQueryAsyncTask extends AsyncTask<String, Void, List<Movi
     }
 
     @Override
-    protected void onPostExecute(List<MovieDetail> list) {
-        super.onPostExecute(list);
-        detailTaskCompleted.OnDetailTaskCompleted(list);
+    protected void onPostExecute(MovieDetail obj) {
+        super.onPostExecute(obj);
+        Log.d(TAG, "onPostExecute: READY TO go home!!!1");
+        detailTaskCompleted.onDetailTaskCompleted(obj);
     }
 }

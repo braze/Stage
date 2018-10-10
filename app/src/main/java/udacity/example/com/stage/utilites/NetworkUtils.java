@@ -56,7 +56,7 @@ public class NetworkUtils {
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 
-        Log.d(TAG, "LOOK OUT!!! JUST Url " + builtUri.toString());
+        Log.d(TAG, "LOOK OUT!!! JUST Base Url " + builtUri.toString());
 
         URL url = null;
         try {
@@ -107,7 +107,7 @@ public class NetworkUtils {
                 .appendPath(TRAILER)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Trailer Url" + builtUri.toString());
+        Log.d(TAG, "LOOK OUT!!! Trailer Url: " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -129,7 +129,7 @@ public class NetworkUtils {
                 .appendPath(REVIEW)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Reviews Url " + builtUri.toString());
+        Log.d(TAG, "LOOK OUT!!! Reviews Url: " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());

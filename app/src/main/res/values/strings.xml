@@ -9,4 +9,6 @@
     <string name="err_message">Something went wrong)</string>
     <string name="movie_title_hint">Movie name</string>
     <string name="trailers">Trailers:</string>
+    <string name="reviews">Reviews:</string>
+    <string name="duration">Duration:"</string>
 </resources>
