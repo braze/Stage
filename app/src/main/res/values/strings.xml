@@ -4,11 +4,15 @@
     <string name="vote_average">Average vote:</string>
     <string name="plot_synopsis">Plot synopsis:</string>
     <string name="poster">Movie poster</string>
-    <string name="sort_by_popular">sort by popular</string>
-    <string name="sort_by_rating">sort by rating</string>
+    <string name="sort_by_popular">Show popular movies</string>
+    <string name="sort_by_rating">Show the most rated</string>
+    <string name="sort_by_favorite">Just favorite</string>
     <string name="err_message">Something went wrong)</string>
     <string name="movie_title_hint">Movie name</string>
     <string name="trailers">Trailers:</string>
     <string name="reviews">Reviews:</string>
     <string name="duration">Duration:"</string>
+    <string name="Popular_title">Popular</string>
+    <string name="top_rated_title">Top rated</string>
+    <string name="favorite_title">Favorite</string>
 </resources>

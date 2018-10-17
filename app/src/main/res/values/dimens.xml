@@ -9,4 +9,5 @@
     <dimen name="divider_line_height">2dp</dimen>
     <dimen name="padding_top_divider_line">16dp</dimen>
     <dimen name="between_reviews">8dp</dimen>
+    <dimen name="trailer_view_height">64dp</dimen>
 </resources>

@@ -1,26 +1,42 @@
 package udacity.example.com.stage.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable {
+
     private String title;
+    @PrimaryKey
+    @NonNull
     private String movieId;
     private String releaseDate;
     private String posterPath;
     private String voteAverage;
     private String plotSynopsis;
+
+    @Ignore
     private String trailerName;
+    @Ignore
     private String trailerPath;
+    @Ignore
     private String site;
+    @Ignore
     private String size;
+    @Ignore
     private String author;
+    @Ignore
     private String content;
 
+    @Ignore
     public Movie() {
     }
 
-    public Movie(String title, String movieId, String releaseDate, String posterPath, String voteAverage, String plotSynopsis) {
+    public Movie(String title, @NonNull String movieId, String releaseDate, String posterPath, String voteAverage, String plotSynopsis) {
         this.title = title;
         this.movieId = movieId;
         this.releaseDate = releaseDate;
@@ -29,6 +45,7 @@ public class Movie implements Parcelable {
         this.plotSynopsis = plotSynopsis;
     }
 
+    @Ignore
     public Movie(String trailerName, String trailerPath, String site, String size) {
         this.trailerName = trailerName;
         this.trailerPath = trailerPath;
@@ -36,6 +53,7 @@ public class Movie implements Parcelable {
         this.size = size;
     }
 
+    @Ignore
     public Movie(String author, String content) {
         this.author = author;
         this.content = content;

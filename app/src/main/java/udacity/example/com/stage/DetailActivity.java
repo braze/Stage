@@ -1,14 +1,19 @@
 package udacity.example.com.stage;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,8 +24,12 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.example.com.stage.database.AppDatabase;
+import udacity.example.com.stage.model.DetailMovieViewModelFactory;
+import udacity.example.com.stage.model.DetailViewModel;
 import udacity.example.com.stage.model.Movie;
 import udacity.example.com.stage.model.MovieDetail;
+import udacity.example.com.stage.utilites.AppExecutor;
 import udacity.example.com.stage.utilites.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity implements OnDetailTaskCompleted, MovieAdapterOnClickHandler{
@@ -32,11 +41,17 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
     private RecyclerView mTrailersList;
     private RecyclerView mReviewList;
     private Movie mMovie;
+    private String mMovieId;
+    private AppDatabase mDb;
     private ProgressBar mTrailerProgressBar;
     private ProgressBar mReviewProgressBar;
+    private boolean isFavorite;
 
 
     public static final String EXTRA_OBJECT = "extra_position";
+
+    @BindView(R.id.movie_title_tv)
+    TextView title;
 
     @BindView(R.id.release_date_tv)
     TextView releaseDate;
@@ -49,6 +64,9 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
 
     @BindView(R.id.average_vote_tv)
     TextView voteAverage;
+
+    @BindView(R.id.star)
+    ImageView favorite;
 
     @BindView(R.id.plot_synopsis_tv)
     TextView plotSynopsis;
@@ -67,6 +85,8 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         mTrailerProgressBar = findViewById(R.id.pb_trailer_loading_indicator);
         mReviewProgressBar = findViewById(R.id.pb_review_loading_indicator);
 
+        mDb = AppDatabase.getInstance(getApplicationContext());
+
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
@@ -74,10 +94,10 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
 
         mMovie = intent.getExtras().getParcelable(EXTRA_OBJECT);
         String fullPosterPath = NetworkUtils.buildPosterPath(mMovie.getPosterPath());
-        String movieId = mMovie.getMovieId();
+        mMovieId = mMovie.getMovieId();
 
         //query for details
-        makeMovieDetailQuery(movieId);
+        makeMovieDetailQuery(mMovieId);
 
         //set trailer adapter
         mTrailersList = (RecyclerView) findViewById(R.id.rv_trailers);
@@ -105,10 +125,30 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         mReviewAdapter.setReviewsList(mReviewAdapter.getReviewsList());
         mReviewList.setAdapter(mReviewAdapter);
 
-        populateUI(mMovie);
+        DetailMovieViewModelFactory factory = new DetailMovieViewModelFactory(mDb, mMovieId);
+        Log.d(TAG, "onCreate: got factory");
+        final DetailViewModel viewModel
+                = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
+        Log.d(TAG, "onCreate: got viewModel");
+
+        viewModel.getMovie().observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(@Nullable Movie movie) {
+                if (movie != null) {
+                    if(movie.getMovieId().equals(mMovieId)) {
+                        isFavorite = true;
+                        populateUI(mMovie);
+                    }
+                } else {
+                    isFavorite = false;
+                    populateUI(mMovie);
+                }
+            }
+        });
+
         Picasso.with(this).load(fullPosterPath).error(R.drawable.ic_no_poster).into(poster);
-        setTitle(mMovie.getTitle());
     }
+
 
     private void makeMovieDetailQuery(String movieId) {
 
@@ -119,7 +159,6 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-            // TODO: 10/8/18 make progress bar
             mTrailerProgressBar.setVisibility(View.VISIBLE);
             mReviewProgressBar.setVisibility(View.VISIBLE);
             new DetailMovieQueryAsyncTask(DetailActivity.this).execute(movieId);
@@ -127,9 +166,16 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
     }
 
     private void populateUI(Movie mMovie) {
+        title.setText(mMovie.getTitle());
         releaseDate.setText(mMovie.getReleaseDate());
         voteAverage.setText(mMovie.getVoteAverage());
         plotSynopsis.setText(mMovie.getPlotSynopsis());
+        Log.d(TAG, "populateUI: isFavorite = " + isFavorite);
+        if (isFavorite) {
+            favorite.setImageResource(R.drawable.ic_star_black_24dp);
+        } else {
+            favorite.setImageResource(R.drawable.ic_star_border_black_24dp);
+        }
     }
 
     private void closeOnError() {
@@ -139,12 +185,12 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
 
     @Override
     public void onDetailTaskCompleted(MovieDetail obj) {
-        // TODO: 10/8/18 get data from asyncTask
         if (obj != null) {
             mTrailerAdapter.setTrailersList(obj.getTrailersList());
             mReviewAdapter.setReviewsList(obj.getReviewsList());
             runtimeLabel.setVisibility(View.VISIBLE);
             runtime.setVisibility(View.VISIBLE);
+            //create duration string and set it to textView
             String duration = obj.getRuntime() + " " + "min";
             runtime.setText(duration);
         mTrailerProgressBar.setVisibility(View.GONE);
@@ -152,8 +198,47 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         }
     }
 
-    @Override
-    public void onClick(int movieId) {
-
+    //add or delete favorite movie to dataBase
+    //triggered from xml file
+    public void addToFavorite(View view) {
+        if (!isFavorite) {
+            //add this movie to db
+            AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.movieDao().insertMovie(mMovie);
+                    Log.d(TAG, "Movie has been added to FAVORITE");
+                    favorite.setImageResource(R.drawable.ic_star_black_24dp);
+                }
+            });
+        } else {
+            //delete this movie from db
+            AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.movieDao().deleteMovie(mMovie);
+                    Log.d(TAG, "Movie has been deleted from FAVORITE");
+                    favorite.setImageResource(R.drawable.ic_star_border_black_24dp);
+                }
+            });
+        }
     }
+
+    //Trailer adapter click handler
+    @Override
+    public void onClick(int adapterPosition) {
+        String path = mTrailerAdapter.getTrailersList().get(adapterPosition).getTrailerPath();
+        Uri file = Uri.parse(path);
+        Log.d(TAG, "onClick: " + file.toString());
+        playMedia(file);
+    }
+
+    private void playMedia(Uri file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(file);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }
