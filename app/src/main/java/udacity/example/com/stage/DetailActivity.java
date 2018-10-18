@@ -36,6 +36,9 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
+    public static final String INSTANCE_MOVIE = "movie";
+    public static final String EXTRA_OBJECT = "extra_position";
+
     private TrailerAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
     private RecyclerView mTrailersList;
@@ -43,12 +46,7 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
     private Movie mMovie;
     private String mMovieId;
     private AppDatabase mDb;
-    private ProgressBar mTrailerProgressBar;
-    private ProgressBar mReviewProgressBar;
     private boolean isFavorite;
-
-
-    public static final String EXTRA_OBJECT = "extra_position";
 
     @BindView(R.id.movie_title_tv)
     TextView title;
@@ -74,6 +72,12 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
     @BindView(R.id.poster_iv)
     ImageView poster;
 
+    @BindView(R.id.pb_trailer_loading_indicator)
+    ProgressBar mTrailerProgressBar;
+
+    @BindView(R.id.pb_review_loading_indicator)
+    ProgressBar mReviewProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,18 +86,19 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         // bind the view using butterknife
         ButterKnife.bind(this);
 
-        mTrailerProgressBar = findViewById(R.id.pb_trailer_loading_indicator);
-        mReviewProgressBar = findViewById(R.id.pb_review_loading_indicator);
-
         mDb = AppDatabase.getInstance(getApplicationContext());
 
-        Intent intent = getIntent();
-        if (intent == null) {
-            closeOnError();
+        if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_MOVIE)) {
+            mMovie = savedInstanceState.getParcelable(INSTANCE_MOVIE);
+        } else {
+            Intent intent = getIntent();
+            if (intent == null) {
+                closeOnError();
+            } else {
+                mMovie = intent.getExtras().getParcelable(EXTRA_OBJECT);
+            }
         }
 
-        mMovie = intent.getExtras().getParcelable(EXTRA_OBJECT);
-        String fullPosterPath = NetworkUtils.buildPosterPath(mMovie.getPosterPath());
         mMovieId = mMovie.getMovieId();
 
         //query for details
@@ -125,12 +130,10 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         mReviewAdapter.setReviewsList(mReviewAdapter.getReviewsList());
         mReviewList.setAdapter(mReviewAdapter);
 
+        //check if movie is in the database
         DetailMovieViewModelFactory factory = new DetailMovieViewModelFactory(mDb, mMovieId);
-        Log.d(TAG, "onCreate: got factory");
         final DetailViewModel viewModel
                 = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-        Log.d(TAG, "onCreate: got viewModel");
-
         viewModel.getMovie().observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie movie) {
@@ -145,10 +148,7 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
                 }
             }
         });
-
-        Picasso.with(this).load(fullPosterPath).error(R.drawable.ic_no_poster).into(poster);
     }
-
 
     private void makeMovieDetailQuery(String movieId) {
 
@@ -170,6 +170,10 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         releaseDate.setText(mMovie.getReleaseDate());
         voteAverage.setText(mMovie.getVoteAverage());
         plotSynopsis.setText(mMovie.getPlotSynopsis());
+
+        String fullPosterPath = NetworkUtils.buildPosterPath(mMovie.getPosterPath());
+        Picasso.with(this).load(fullPosterPath).error(R.drawable.ic_no_poster).into(poster);
+
         Log.d(TAG, "populateUI: isFavorite = " + isFavorite);
         if (isFavorite) {
             favorite.setImageResource(R.drawable.ic_star_black_24dp);
@@ -239,6 +243,12 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(INSTANCE_MOVIE, mMovie);
+        super.onSaveInstanceState(outState);
     }
 
 }

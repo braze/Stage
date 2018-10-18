@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/trailer_view_height"
+        android:background="@color/colorPrimaryLight"
         android:orientation="horizontal">
 
         <ImageView
@@ -19,7 +20,9 @@
             android:id="@+id/tv_trailer_name"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/trailer_view_height"
-            android:gravity="center"/>
+            android:textSize="@dimen/text_size_tag"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/between_trailers"/>
 
     </LinearLayout>
 </FrameLayout>
