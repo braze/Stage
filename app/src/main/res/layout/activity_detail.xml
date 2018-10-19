@@ -23,7 +23,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_top"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/movie_title_tv">
 
@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/dest_between_header_and_text"
+                    android:paddingTop="@dimen/margin_top"
                     android:textSize="@dimen/text_size" />
 
                 <!-- average vote tag -->
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/dest_between_header_and_text"
+                    android:paddingTop="@dimen/margin_top"
                     android:textSize="@dimen/text_size"
                     android:visibility="gone"/>
 
@@ -194,7 +194,7 @@
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_top"
             app:layout_constraintStart_toStartOf="@+id/plot_synopsis_tv"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout">
 

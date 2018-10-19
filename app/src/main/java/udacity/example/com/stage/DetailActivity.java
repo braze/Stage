@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -33,8 +32,6 @@ import udacity.example.com.stage.utilites.AppExecutor;
 import udacity.example.com.stage.utilites.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity implements OnDetailTaskCompleted, MovieAdapterOnClickHandler{
-
-    private static final String TAG = DetailActivity.class.getSimpleName();
 
     public static final String INSTANCE_MOVIE = "movie";
     public static final String EXTRA_OBJECT = "extra_position";
@@ -126,7 +123,7 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         mReviewList.addItemDecoration(dividerItemDecoration2);
         mReviewList.setHasFixedSize(true);
 
-        mReviewAdapter = new ReviewAdapter(this);
+        mReviewAdapter = new ReviewAdapter();
         mReviewAdapter.setReviewsList(mReviewAdapter.getReviewsList());
         mReviewList.setAdapter(mReviewAdapter);
 
@@ -150,6 +147,11 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         });
     }
 
+    /**
+     * get Detail information, trailers, reviews, movie duration
+     *
+     * @param movieId movie Id
+     */
     private void makeMovieDetailQuery(String movieId) {
 
         //check for internet connection
@@ -165,16 +167,20 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         }
     }
 
-    private void populateUI(Movie mMovie) {
-        title.setText(mMovie.getTitle());
-        releaseDate.setText(mMovie.getReleaseDate());
-        voteAverage.setText(mMovie.getVoteAverage());
-        plotSynopsis.setText(mMovie.getPlotSynopsis());
+    /**
+     * populate UI
+     *
+     * @param movie movie obj
+     */
+    private void populateUI(Movie movie) {
+        title.setText(movie.getTitle());
+        releaseDate.setText(movie.getReleaseDate());
+        voteAverage.setText(movie.getVoteAverage());
+        plotSynopsis.setText(movie.getPlotSynopsis());
 
-        String fullPosterPath = NetworkUtils.buildPosterPath(mMovie.getPosterPath());
+        String fullPosterPath = NetworkUtils.buildPosterPath(movie.getPosterPath());
         Picasso.with(this).load(fullPosterPath).error(R.drawable.ic_no_poster).into(poster);
 
-        Log.d(TAG, "populateUI: isFavorite = " + isFavorite);
         if (isFavorite) {
             favorite.setImageResource(R.drawable.ic_star_black_24dp);
         } else {
@@ -187,6 +193,13 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
         Toast.makeText(this, R.string.err_message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * method starts after DetailMovieQueryAsyncTask is completed
+     * set lists to their adapters and set runTime textView
+     *
+     * @param obj movie object with list of trailers, list of reviews
+     *            and movie duration
+     */
     @Override
     public void onDetailTaskCompleted(MovieDetail obj) {
         if (obj != null) {
@@ -211,7 +224,6 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
                 @Override
                 public void run() {
                     mDb.movieDao().insertMovie(mMovie);
-                    Log.d(TAG, "Movie has been added to FAVORITE");
                     favorite.setImageResource(R.drawable.ic_star_black_24dp);
                 }
             });
@@ -221,7 +233,6 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
                 @Override
                 public void run() {
                     mDb.movieDao().deleteMovie(mMovie);
-                    Log.d(TAG, "Movie has been deleted from FAVORITE");
                     favorite.setImageResource(R.drawable.ic_star_border_black_24dp);
                 }
             });
@@ -233,10 +244,14 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
     public void onClick(int adapterPosition) {
         String path = mTrailerAdapter.getTrailersList().get(adapterPosition).getTrailerPath();
         Uri file = Uri.parse(path);
-        Log.d(TAG, "onClick: " + file.toString());
         playMedia(file);
     }
 
+    /**
+     * make Intent for play trailer
+     *
+     * @param file Uri path for intent
+     */
     private void playMedia(Uri file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(file);

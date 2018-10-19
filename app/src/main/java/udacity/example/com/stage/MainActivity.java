@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,9 +32,8 @@ import static udacity.example.com.stage.utilites.NetworkUtils.TOP_RATED;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapterOnClickHandler, OnTaskCompleted {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private MovieAdapter mAdapter;
-    private RecyclerView mNumbersList;
+    private RecyclerView mFrontPageList;
     private ProgressBar mProgressBar;
 
     @Override
@@ -45,21 +43,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
 
         mProgressBar = findViewById(R.id.pb_loading_indicator);
 
-        mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
+        mFrontPageList = (RecyclerView) findViewById(R.id.rv_numbers);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-        mNumbersList.setLayoutManager(layoutManager);
-        mNumbersList.setHasFixedSize(true);
+        mFrontPageList.setLayoutManager(layoutManager);
+        mFrontPageList.setHasFixedSize(true);
 
         mAdapter = new MovieAdapter(this);
         mAdapter.setMoviesList(mAdapter.getMoviesList());
-        mNumbersList.setAdapter(mAdapter);
+        mFrontPageList.setAdapter(mAdapter);
 
         AppDatabase.getInstance(this);
 
         makeMovieQuery(DISCOVER);
     }
 
-    //Movie adapter click handler
+    /**
+     * Movie adapter click handler
+     *
+     * @param position position of recyclerView
+     */
     @Override
     public void onClick(int position) {
         Movie movie = mAdapter.getMoviesList().get(position);
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         startActivity(intent);
     }
 
+    /**
+     * Make query depending on query
+     *
+     * @param query The sort type that will be queried for.
+     */
     private void makeMovieQuery(String query) {
         //check for internet connection
         ConnectivityManager connectivityManager =
@@ -109,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
             viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
                 @Override
                 public void onChanged(@Nullable List<Movie> movies) {
-                    Log.d(TAG, "Set list of movies from LiveData in ViewModel");
                     mAdapter.setMoviesList(movies);
                 }
             });
@@ -119,7 +125,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterOnCli
         return super.onOptionsItemSelected(item);
     }
 
-    //this method invokes after AsyncTask is completed
+    /**
+     * method is invoke after MovieQueryAsyncTask is completed
+     *
+     * @param list of Movie obj with main info
+     */
     @Override
     public void onTaskCompleted(List<Movie> list) {
         mAdapter.setMoviesList(list);

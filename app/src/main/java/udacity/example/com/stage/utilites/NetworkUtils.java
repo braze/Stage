@@ -1,7 +1,6 @@
 package udacity.example.com.stage.utilites;
 
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +12,6 @@ import java.util.Scanner;
 import udacity.example.com.stage.BuildConfig;
 
 public class NetworkUtils {
-
-    private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/";
 
@@ -29,7 +26,6 @@ public class NetworkUtils {
     public final static String TOP_RATED = "movie/top_rated";
 
     public final static String DISCOVER = "discover/movie";
-
 
     //picture size for poster query
     private static final String SIZE = "w500";
@@ -55,9 +51,6 @@ public class NetworkUtils {
                 .appendEncodedPath(sortBy)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-
-        Log.d(TAG, "LOOK OUT!!! JUST Base Url " + builtUri.toString());
-
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -91,7 +84,6 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(YOUTUBE_BASE_URL).buildUpon()
                 .appendQueryParameter(TRAILER_KEY_PARAM, youTubeKey)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! youtube link: " + builtUri);
         return builtUri.toString();
     }
 
@@ -107,7 +99,6 @@ public class NetworkUtils {
                 .appendPath(TRAILER)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Trailer Url: " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -129,7 +120,6 @@ public class NetworkUtils {
                 .appendPath(REVIEW)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Reviews Url: " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -150,7 +140,6 @@ public class NetworkUtils {
                 .appendPath(id)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
-        Log.d(TAG, "LOOK OUT!!! Base Information Url " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());

@@ -25,5 +25,4 @@ public interface MovieDao {
 
     @Query("SELECT * FROM movie WHERE movieId = :movieId")
     LiveData<Movie> loadMovieById(String movieId);
-//    Movie loadMovieById(String movieId);
 }

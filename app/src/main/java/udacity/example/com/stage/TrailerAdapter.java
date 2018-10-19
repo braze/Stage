@@ -20,7 +20,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
 
     private final MovieAdapterOnClickHandler mClickHandler;
 
-
     public TrailerAdapter(MovieAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }

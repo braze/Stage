@@ -15,7 +15,6 @@ public class MovieQueryAsyncTask extends AsyncTask<URL, Void, List<Movie>> {
 
     private OnTaskCompleted taskCompleted;
 
-
     public MovieQueryAsyncTask (OnTaskCompleted activityContext){
         this.taskCompleted = activityContext;
     }

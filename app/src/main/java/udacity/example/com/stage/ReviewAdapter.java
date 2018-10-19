@@ -17,13 +17,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
 
     private List<Movie> mReviewsList;
 
-    private final MovieAdapterOnClickHandler mClickHandler;
-
-
-    public ReviewAdapter(MovieAdapterOnClickHandler clickHandler) {
-        mClickHandler = clickHandler;
-    }
-
     @Override
     public ReviewAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
@@ -76,13 +69,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
             // binding view
             ButterKnife.bind(this, itemView);
 
-//            itemView.setOnClickListener(this);
         }
-
-//        @Override
-//        public void onClick(View view) {
-//            int adapterPosition = getAdapterPosition();
-//            mClickHandler.onClick(adapterPosition);
-//        }
     }
 }

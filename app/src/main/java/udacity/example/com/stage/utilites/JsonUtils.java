@@ -11,7 +11,12 @@ import udacity.example.com.stage.model.Movie;
 public class JsonUtils {
     private static final String TAG = JsonUtils.class.getSimpleName();
 
-
+    /**
+     * Get main movie information
+     *
+     * @param string JSON string
+     * @return ArrayList of Movie objects.
+     */
     public static ArrayList<Movie> populateJsonList (String string) {
 
         ArrayList<Movie> list = new ArrayList<>();
@@ -39,6 +44,12 @@ public class JsonUtils {
         return list;
     }
 
+    /**
+     * Get movie's trailers
+     *
+     * @param string JSON string
+     * @return ArrayList of Movie objects.
+     */
     public static ArrayList<Movie> getTrailersList(String string) {
         ArrayList<Movie> list = new ArrayList<>();
         JSONObject obj = null;
@@ -63,6 +74,12 @@ public class JsonUtils {
         return list;
     }
 
+    /**
+     * Get movie's reviews
+     *
+     * @param string JSON string
+     * @return ArrayList of Movie objects.
+     */
     public static ArrayList<Movie> getReviewsList(String string) {
         ArrayList<Movie> list = new ArrayList<>();
         JSONObject obj = null;
@@ -83,9 +100,15 @@ public class JsonUtils {
         return list;
     }
 
+    /**
+     * Get movie time duration
+     *
+     * @param string JSON string
+     * @return ArrayList of Movie objects.
+     */
     public static String getMovieBaseInfo(String string) {
         String runtime = "";
-        JSONObject obj = null;
+        JSONObject obj;
         try {
             obj = new JSONObject(string);
             runtime = obj.getString("runtime");
