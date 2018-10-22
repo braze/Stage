@@ -11,7 +11,10 @@ import java.util.Scanner;
 
 import udacity.example.com.stage.BuildConfig;
 
-public class NetworkUtils {
+final public class NetworkUtils {
+
+    private NetworkUtils() {
+    }
 
     private static final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/";
 

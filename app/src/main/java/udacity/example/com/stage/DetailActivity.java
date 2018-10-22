@@ -224,7 +224,6 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
                 @Override
                 public void run() {
                     mDb.movieDao().insertMovie(mMovie);
-                    favorite.setImageResource(R.drawable.ic_star_black_24dp);
                 }
             });
         } else {
@@ -233,7 +232,6 @@ public class DetailActivity extends AppCompatActivity implements OnDetailTaskCom
                 @Override
                 public void run() {
                     mDb.movieDao().deleteMovie(mMovie);
-                    favorite.setImageResource(R.drawable.ic_star_border_black_24dp);
                 }
             });
         }

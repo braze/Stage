@@ -57,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
 
-    public void setMoviesList(List moviesList) {
+    public void setMoviesList(List<Movie> moviesList) {
         mMoviesList = moviesList;
         notifyDataSetChanged();
     }

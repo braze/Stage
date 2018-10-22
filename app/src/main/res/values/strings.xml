@@ -5,7 +5,7 @@
     <string name="plot_synopsis">Plot synopsis:</string>
     <string name="poster">Movie poster</string>
     <string name="sort_by_popular">Show popular movies</string>
-    <string name="sort_by_rating">Show the most rated</string>
+    <string name="sort_by_rating">Show top rated</string>
     <string name="sort_by_favorite">Just favorite</string>
     <string name="err_message">Something went wrong)</string>
     <string name="movie_title_hint">Movie name</string>

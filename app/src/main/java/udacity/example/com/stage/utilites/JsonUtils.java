@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 import udacity.example.com.stage.model.Movie;
 
-public class JsonUtils {
-    private static final String TAG = JsonUtils.class.getSimpleName();
+final public class JsonUtils {
+
+    private JsonUtils() {
+    }
 
     /**
      * Get main movie information
